@@ -34,32 +34,60 @@ app.get('/todos', (req,res)=>{
 });
 
 //GET /todos/dfadsfs (v 78)
-app.get('/todos/:id', (req,res)=>{
-  //validate id using isValid
-    //404 -send back empty
+// app.get('/todos/:id', (req,res)=>{
+//   //validate id using isValid
+//     //404 -send back empty
+//   var id = req.params.id;
+//   if(!ObjectID.isValid(id)){
+//     console.log('Id is not valid');
+//     return res.status(400).send('Id is not valid - 400', 400);
+//     }
+// //findById
+//   //success
+//     //if todo - send it back
+//     //if no todo - send back 404 with empty body
+//   Todo.findById(id).then((todo)=>{
+//     if(!todo){
+//       console.log('Id not found.');
+//       return res.status(404).send('Id not found - 404', 404);
+//     } else{
+//         console.log('todo\n', todo);
+//         res.send({todo});
+//     }
+//   }).catch((e)=>{
+//     res.status(400).send();
+//   });
+// });
+    //error
+      //400 - send back empty body back
+
+app.delete('/todos/:id', (req, res)=>{
+  //get the id
   var id = req.params.id;
+  //validate id =>not valid-> 404
   if(!ObjectID.isValid(id)){
     console.log('Id is not valid');
-    return res.status(400).send('Id is not valid - 400', 400);
-    }
-//findById
-  //success
-    //if todo - send it back
-    //if no todo - send back 404 with empty body
-  Todo.findById(id).then((todo)=>{
+    return res.status(404).send('id is not valid - 404');
+  }
+  Todo.findByIdAndRemove(id).then((todo)=>{
     if(!todo){
-      console.log('Id not found.');
-      return res.status(404).send('Id not found - 404', 404);
-    } else{
-        console.log('todo\n', todo);
-        res.send({todo});
+      console.log('Id not found');
+      return res.status(404).send('Id not found -404');
+    } else {
+      console.log('remove!', todo);
+      res.send({todo});
     }
   }).catch((e)=>{
     res.status(400).send();
   });
 });
+
+  //remove todo by id
+    //success
+      //if no doc, send 404
+      //if doc, send back with 200
     //error
-      //400 - send back empty body back
+      //400 with empty body
 
 
 app.listen(port, ()=>{
